@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * $Id: struts-plugin.xml 722219 2008-12-01 20:41:26Z musachy $
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <!-- 指定全局国际化资源文件 -->
+    <!-- <constant name="struts.custom.i18n.resources" value="ApplicationResources"/> -->
+    
+    <!-- 当 struts的配置文件修改后，系统是否自动重新加载该文件，默认值为false（生 产环境下使用），开发阶段最好打开 -->
+    <constant name="struts.i18n.reload" value="true"/>
+    
+    <!-- 指定国际化编码使用的字符集 -->
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    
+    <!-- 允许通过ognl访问静态方法 -->
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+    
+    <!-- 该属性指定需要Struts 2处理的请求后缀，该属性的默认值是action，即所有匹配*.action的请求都由Struts 2处理。如 
+        果用户需要指定多个请求后缀，则多个后缀之间以英文逗号（，）隔开 -->
+    <constant name="struts.action.extension" value="action," />
+    
+    <!-- 当使用动态调用方法时（action名 + 感叹号 + 方法名进行方法调用），需要将其属性改为true;通配符调用语法时，建议将其属性改为false（struts2.5中默认是false） -->
+    <constant name="struts.enable.DynamicMethodInvocation" value="true" />
+    
+    <constant name="struts.multipart.parser" value="jakarta" />
+    <constant name="struts.multipart.maxSize" value="10485760" />
+    <constant name="struts.multipart.saveDir" value="javax.servlet.context.tempdir" />
+    
+    <!-- 设置浏览器是否缓存静态内容,默认值为true(生产环境下使用),开发阶段最好关闭 -->
+    <constant name="struts.serve.static.browerCache" value="false" />
+    
+    <!--设置开发者模式 -->
+    <constant name="struts.devMode" value="false" />
+    
+    <!-- 指定视图标签默认的视图主题 -->
+    <constant name="struts.ui.theme" value="xhtml" />
+    
+    <include file="struts-default.xml" />
+
+    <package name="default" namespace="/" extends="struts-default,json-default">
+    	<interceptors>
+            <interceptor-stack name="myDefaultStack">
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="myDefaultStack"></default-interceptor-ref>
+        <global-results>
+            <result name="errorPage" type="redirectAction"> 
+                <param name="namespace">/</param> 
+                <param name="actionName">ErrorPageAction.action</param> 
+            </result>
+            <result name="error">/jsp/common/ErrorPage.jsp</result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+        
+        <!-- Ajax -->
+        <action name="AjaxAction" class="cn.com.yuhaijun.common.ajax.AjaxAction">
+            <result name="success" type="json">
+            	<param name="root">jsonData</param>
+            </result>
+            <allowed-methods>toGetInfo</allowed-methods>
+        </action>
+        
+        <!-- ErrorPageAction -->
+        <action name="ErrorPageAction" class="cn.com.yuhaijun.common.error.ErrorPageAction" method="toInit">
+            <result name="initURL">/jsp/common/ErrorPage.jsp</result>
+            <allowed-methods>toInit</allowed-methods>
+        </action>
+        
+    </package>
+    
+    <!-- COMMON -->
+    <include file="./struts2config/main.xml" />
+    
+</struts>

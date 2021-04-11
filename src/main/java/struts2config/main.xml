@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * $Id: struts-plugin.xml 722219 2008-12-01 20:41:26Z musachy $
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<!-- COMMON_普通业务 -->
+<struts>
+	<package name="Main" namespace="/Main" extends="struts-default">
+        <interceptors>
+            <interceptor-stack name="myDefaultStack">
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="myDefaultStack"></default-interceptor-ref>
+        <global-results>
+            <result name="errorPage" type="redirectAction"> 
+                <param name="namespace">/</param> 
+                <param name="actionName">ErrorPageAction.action</param> 
+            </result>
+            <result name="error">/jsp/common/ErrorPage.jsp</result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+        
+        <!-- ErrorPageAction -->
+        <action name="ErrorPageAction" class="cn.com.yuhaijun.common.error.ErrorPageAction" method="toInit">
+            <result name="initURL">/jsp/common/ErrorPage.jsp</result>
+            <allowed-methods>toInit</allowed-methods>
+        </action>
+        
+        <!-- SamplePageAction -->
+        <action name="SampleAction" class="cn.com.yuhaijun.app.action.SampleAction" method="toInit">
+            <result name="initURL">/jsp/sample.jsp</result>
+            <allowed-methods>toInit,toSearch</allowed-methods>
+        </action>
+        
+
+	</package>
+</struts>    
